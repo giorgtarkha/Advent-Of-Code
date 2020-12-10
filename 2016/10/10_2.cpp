@@ -11,11 +11,10 @@ typedef struct {
 int main() {
 	
 	ifstream fin("10.in");
-	ofstream fout("10_1.out");
+	ofstream fout("10_2.out");
 	string s;
 	
 	map<int, bot> bots;
-	
 	while (fin >> s) {
 		if (s == "value") {
 			fin >> s;
@@ -45,14 +44,12 @@ int main() {
 		}
 	}
 	
+	map<int, int> outputs;
 	while (true) {
+		bool have_workings_bots = false;
 		for (auto it = bots.begin(); it != bots.end(); ++it) {
 			if (it->second.values.size() == 2) {
-				if ((it->second.values[0] == 61 && it->second.values[1] == 17) || 
-					(it->second.values[0] == 17 && it->second.values[1] == 61)) {
-						fout << it->first;
-						return 0;
-				}
+				have_workings_bots = true;
 				int lower = min(it->second.values[0], it->second.values[1]);
 				int higher = max(it->second.values[0], it->second.values[1]);
 				string target_lower = "";
@@ -62,6 +59,8 @@ int main() {
 				reverse(target_lower.begin(), target_lower.end());
 				if (it->second.lower_to[0] == 'b') {
 					bots[stoi(target_lower)].values.push_back(lower);
+				} else {
+					outputs[stoi(target_lower)] = lower;
 				}
 				
 				string target_higher = "";
@@ -71,12 +70,19 @@ int main() {
 				reverse(target_higher.begin(), target_higher.end());
 				if (it->second.higher_to[0] == 'b') {
 					bots[stoi(target_higher)].values.push_back(higher);
+				} else {
+					outputs[stoi(target_higher)] = higher;
 				}
+				
 				it->second.values.clear();
 			}
 		}
+		if (!have_workings_bots) {
+			break;
+		}
 	}
 	
+	fout << outputs[0] * outputs[1] * outputs[2];
 	
 	return 0;
 }
