@@ -1,0 +1,25 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+	
+	ifstream fin("1.in");
+	ofstream fout("1_1.out");
+	
+	int prev = -1, next = -1;
+	int x, ans = 0;
+	while (fin >> x) {
+		if (prev == -1) {
+			prev = x;
+			next = x;
+		} else {
+			ans += x > prev;
+			prev = next;
+			next = x;
+		}
+	}
+	fout << ans << endl;
+	
+	return 0;
+}
